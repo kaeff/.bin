@@ -8,9 +8,15 @@ function glog {
 # Returns range of commits that upstream is ahead of local
 function diff-upstream-range {
   LOCAL_BRANCH=`git branch | grep '\*' | sed 's/\* //g'`
-  REMOTE_BRANCH=`git branch -vv | grep $LOCAL_BRANCH | sed 's/^.*\[\([^:\[]*\)\(: \(ahead [0-9]*\)*\(, \)*\(behind [0-9]*\)*\)*.*$/\1/g'`
-  echo "$LOCAL_BRANCH..$REMOTE_BRANCH"
+  #REMOTE_BRANCH=`
+    #git branch -vv |
+    #grep $LOCAL_BRANCH |
+    #sed 's/^.*\[\([^:\[]*\)\(: \(ahead [0-9]*\)*\(, \)*\(behind [0-9]*\)*\)*].*$/\1/g'`
+  REMOTE=`git config -l | grep "^branch.$LOCAL_BRANCH.remote=" | cut -d = -f 2`
+  REMOTE_BRANCH=`git config -l | grep "^branch.$LOCAL_BRANCH.merge=" | cut -d = -f 2 | sed 's/^refs\/heads\///g'`
+  echo "$LOCAL_BRANCH..$REMOTE/$REMOTE_BRANCH"
 }
 
-git fetch
-glog `diff-upstream-range`
+#git fetch
+#glog `diff-upstream-range`
+echo `diff-upstream-range`

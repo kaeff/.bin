@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Pretty-prints the commit range
+function glog {
+  git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit $1
+}
+
+# Returns the range of commits that were integrated upon the last `git pull --rebase`
+function gupped-range {
+  git reflog | grep -A 1 "pull --rebase: checkout" | ruby -e 'puts STDIN.first(2).reverse.map {|l| l.split(" ").first }.join("..")'
+}
+
+glog `gupped-range`

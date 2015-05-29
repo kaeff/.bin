@@ -17,6 +17,5 @@ function diff-upstream-range {
   echo "$LOCAL_BRANCH..$REMOTE/$REMOTE_BRANCH"
 }
 
-#git fetch
-#glog `diff-upstream-range`
-echo `diff-upstream-range`
+git fetch
+glog `diff-upstream-range`

@@ -1,0 +1,14 @@
+#! /usr/bin/env sh
+repos_json=`curl -s https://api.github.com/users/$1/repos`
+echo $repos_json | ruby -rjson -e 'exit 1 if JSON.load(STDIN.read).empty?;'
+if [ $? -ne 0 ] ; then
+    echo "Problem when asking Github for the repositories for this user. Github returned:"
+    echo $repos_json
+    exit 1
+fi
+mkdir "$1"
+if [ $? -ne 0 ] ; then
+    exit 1
+fi
+cd "$1"
+echo $repos_json | ruby -rjson -e 'JSON.load(STDIN.read).each {|repo| %x[git clone #{repo["ssh_url"]} ]}'

@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -depth 2 -type d -name '.git' -exec dirname {}  \; | xargs -I '{}' sh -c 'cd {} && echo "Updating `pwd`" && git pull --rebase'
+find . -depth 2 -type d -name '.git' -exec dirname {}  \; | xargs -I '{}' sh -c 'cd {} && echo "Updating `pwd`" && git pull --rebase; echo ""'

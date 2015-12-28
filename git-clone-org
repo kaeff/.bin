@@ -6,9 +6,8 @@ if [ $? -ne 0 ] ; then
     echo $repos_json
     exit 1
 fi
-mkdir "$1"
-if [ $? -ne 0 ] ; then
-    exit 1
-fi
+
+mkdir -p "$1"
 cd "$1"
+
 echo $repos_json | ruby -rjson -e 'JSON.load(STDIN.read).each {|repo| %x[git clone #{repo["ssh_url"]} ]}'

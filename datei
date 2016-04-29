@@ -1,0 +1,4 @@
+#! /bin/bash
+
+# Outputs date in ISO format. date's -I flag isn't known on OSX
+date +%Y-%m-%dT%H:%M:%S%z

@@ -1,0 +1,3 @@
+#! /bin/bash
+# coln - Prints the "column number N" of a space-separated column using awk
+awk "{ print \$$1 }"

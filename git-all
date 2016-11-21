@@ -1,0 +1,7 @@
+#!/bin/zsh
+for folder in $(find . -name .git -type d); do
+  dir=$(dirname $folder)
+
+  printf "\n------\n$dir\n------\n"
+  sh -c "cd $(dirname $folder) && git $@"
+done

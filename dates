@@ -1,0 +1,4 @@
+#! /bin/bash
+
+# Outputs date in simple, sortable format
+date +%Y-%m-%d

@@ -1,7 +1,30 @@
-#!/bin/zsh
+#!/bin/zsh -i
+
+# Given a folder that contains multiple git repository folders, this script runs a git command in all of them
+#
+#
+# e.g. given this directory structure:
+# - current-working-dir
+# -- repo1
+# -- repo2
+#
+# , `git all pull --rebase` will `pull --rebase` both repo1 and repo2
+#
+# git-all resolves alias: Given `alias gst=git status`, then `git all gst` will be equal to `git all status`
+
+commandOrAlias=$1
+commandArgs=`echo $@ | cut -s -d ' ' -f 2-`
+resolvedAlias=`alias $commandOrAlias | sed s/\'//g | cut -d ' ' -f 2-`
+command=$commandOrAlias
+if [ "$resolvedAlias" != "" ]; then
+  command=$resolvedAlias
+fi
+fullCommand="git $command $commandArgs"
+
+echo $command
 for folder in $(find . -name .git -type d); do
   dir=$(dirname $folder)
 
   printf "\n------\n$dir\n------\n"
-  sh -c "cd $(dirname $folder) && git $@"
+  bash -c "cd $(dirname $folder) && $fullCommand"
 done

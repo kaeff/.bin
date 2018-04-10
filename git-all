@@ -21,7 +21,7 @@ if [ "$resolvedAlias" != "" ]; then
 fi
 fullCommand="git $command $commandArgs"
 
-echo $command
+echo $fullCommand
 for folder in $(find . -name .git -type d); do
   dir=$(dirname $folder)
 

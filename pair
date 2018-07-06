@@ -1,0 +1,1 @@
+git log --pretty=format:'%an <%ae>' | sort -u | grep -v '@users.noreply.github.com' | hs  | parallel echo '\\n\\nCo-Authored-By: {}' > .gitmessage

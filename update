@@ -1,0 +1,5 @@
+#! /usr/local/bin/zsh
+
+upgrade_oh_my_zsh
+brew update
+cd ~/code/gh && git fetch-recursive

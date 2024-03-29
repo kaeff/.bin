@@ -6,24 +6,29 @@ from datetime import datetime
 from convert_filename_date import convert_date_format, rename_files_in_directory
 
 class TestConvertDateFormat(unittest.TestCase):
-    def test_convert_date_format(self):
-        filename1 = '20220429_filename.pdf'
-        old_format1 = 'YYYYMMDD'
-        new_format1 = 'YY-MM-DD'
-        expected_filename1 = '22-04-29_filename.pdf'
-        self.assertEqual(convert_date_format(filename1, old_format1, new_format1), expected_filename1)
-
-        filename2 = '2022-04-29_filename.pdf'
-        old_format2 = 'YYYY-MM-DD'
-        new_format2 = 'DD-MM-YY'
-        expected_filename2 = '29-04-22_filename.pdf'
-        self.assertEqual(convert_date_format(filename2, old_format2, new_format2), expected_filename2)
-
-        filename3 = '22-04-29_filename.pdf'
-        old_format3 = 'YY-MM-DD'
-        new_format3 = 'YYYYMMDD'
-        expected_filename3 = '20220429_filename.pdf'
-        self.assertEqual(convert_date_format(filename3, old_format3, new_format3), expected_filename3)
+    def test_convert_date_format_1(self):
+        filename = '20220429_filename.pdf'
+        old_format = 'YYYYMMDD'
+        new_format = 'YY-MM-DD'
+        expected_filename = '22-04-29_filename.pdf'
+    
+        self.assertEqual(convert_date_format(filename, old_format, new_format), expected_filename)
+    
+    def test_convert_date_format_2(self):
+        filename = '2022-04-29_filename.pdf'
+        old_format = 'YYYY-MM-DD'
+        new_format = 'DD-MM-YY'
+        expected_filename = '29-04-22_filename.pdf'
+    
+        self.assertEqual(convert_date_format(filename, old_format, new_format), expected_filename)
+    
+    def test_convert_date_format_3(self):
+        filename = '22-04-29_filename.pdf'
+        old_format = 'YY-MM-DD'
+        new_format = 'YYYYMMDD'
+        expected_filename = '20220429_filename.pdf'
+    
+        self.assertEqual(convert_date_format(filename, old_format, new_format), expected_filename)
 
     def test_convert_date_format_with_space(self):
         filename1 = '20220429 filename.pdf'

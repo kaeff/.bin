@@ -56,7 +56,7 @@ def extract_date(text):
     try:
         date = parser.parse(text, fuzzy=True, dayfirst=True, yearfirst=True)
         # Format date in German format
-        formatted_date = date.strftime("%Y%m%d")
+        formatted_date = date.strftime("%Y-%m-%d")
         return formatted_date
     except ValueError:
         return None
@@ -69,13 +69,13 @@ def perform_ocr(pdf_file):
     dirname, filename = os.path.split(pdf_file)
     basename, ext = os.path.splitext(filename)
     tmp_pdf_ocred = os.path.join(dirname, basename + ".ocr" + ext)
-    
+
     if os.path.exists(tmp_pdf_ocred):
         os.remove(tmp_pdf_ocred)
-    
+
     ocrmypdf.ocr(pdf_file, tmp_pdf_ocred, force_ocr=True)
     text = extract_text(tmp_pdf_ocred)
-    
+
     os.remove(tmp_pdf_ocred)
     return text
 
@@ -115,7 +115,7 @@ def prefix_filename_date_ocr(force, print_text):
         else:
             print(pdf_file + " -> " + new_file_name)
 
-        
+
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser()

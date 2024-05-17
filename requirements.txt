@@ -1,3 +1,4 @@
 pdfminer.six
 ocrmypdf
 python-dateutil
+fpdf

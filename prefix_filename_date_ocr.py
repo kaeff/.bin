@@ -1,6 +1,7 @@
-#! /usr/bin/env python3
+#! /Users/kaeff/.bin/.venv/bin/python3
 
 from argparse import ArgumentParser, BooleanOptionalAction
+from datetime import datetime
 import os
 import glob
 import re
@@ -54,10 +55,7 @@ def extract_date(text):
 
     # Parse date using dateutil with fuzzy=True
     try:
-        date = parser.parse(text, fuzzy=True, dayfirst=True, yearfirst=True)
-        # Format date in German format
-        formatted_date = date.strftime("%Y-%m-%d")
-        return formatted_date
+        return parser.parse(text, fuzzy=True, dayfirst=True, yearfirst=True)
     except ValueError:
         return None
 
@@ -87,13 +85,19 @@ def get_new_filename(pdf_file, print_text):
         text = extract_text(pdf_file)
         date = extract_date(text)
 
-        if not date:
-            text = perform_ocr(pdf_file)
-            date = extract_date(text)
+    if not date:
+        text = perform_ocr(pdf_file)
+        date = extract_date(text)
+
+    if not date:
+        # Use last modified timestamp as date
+        timestamp = os.path.getmtime(pdf_file)
+        date = datetime.fromtimestamp(timestamp).date()
 
     # Rename file with prefix and date
     if date:
-        new_file_name = f"{date}_{pdf_file}"
+        formatted_date = date.strftime("%Y-%m-%d")
+        new_file_name = os.path.join(os.path.dirname(pdf_file), f"{formatted_date}_{os.path.basename(pdf_file)}")
     else:
         new_file_name = pdf_file
 

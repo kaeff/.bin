@@ -6,6 +6,7 @@ import argparse
 from datetime import datetime
 import piexif
 
+
 def get_creation_time(file_name):
     if sys.platform == 'darwin':  # macOS
         stat = os.stat(file_name)
@@ -13,15 +14,19 @@ def get_creation_time(file_name):
     else:
         return os.path.getctime(file_name)
 
+
 def write_exif_creation_date(file_name, creation_date):
     formatted_creation_date = creation_date.strftime("%Y:%m:%d %H:%M:%S")
-    exif_dict = {"Exif": {piexif.ExifIFD.DateTimeOriginal: formatted_creation_date}}
+    exif_dict = {
+        "Exif": {piexif.ExifIFD.DateTimeOriginal: formatted_creation_date}}
     exif_bytes = piexif.dump(exif_dict)
     try:
         piexif.insert(exif_bytes, file_name)
         print(f"Creation date added to EXIF information of '{file_name}'")
     except Exception as e:
-        print(f"Failed to write creation date to EXIF information of '{file_name}': {e}")
+        print(f"Failed to write creation date to EXIF information of '{
+              file_name}': {e}")
+
 
 def rename_files(files, datetime_format, dry_run):
     for file_name in files:
@@ -46,8 +51,10 @@ def rename_files(files, datetime_format, dry_run):
             except Exception as e:
                 print(f"Failed to rename '{file_name}': {e}")
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Rename files using creation date")
+    parser = argparse.ArgumentParser(
+        description="Rename files using creation date")
     parser.add_argument("files", nargs="+", help="List of files to rename")
     parser.add_argument("-df", "--datetime-format", default="%Y-%m-%d_%H-%M-%S",
                         help="Datetime format to use for renaming (default: %(default)s)")
@@ -60,6 +67,6 @@ def main():
     else:
         rename_files(args.files, args.datetime_format, dry_run=True)
 
+
 if __name__ == "__main__":
     main()
-

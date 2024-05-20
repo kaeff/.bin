@@ -6,6 +6,7 @@ import os
 import argparse
 from pdfminer.high_level import extract_text
 
+
 def find_month(input_string):
     months = {
         "ENE": "01",
@@ -31,6 +32,7 @@ def find_month(input_string):
     else:
         return None
 
+
 def find_rsu(input_string):
     pattern = r'\bRSU (\d{2})/20(\d{2})\b'
     match = re.search(pattern, input_string)
@@ -53,10 +55,13 @@ def rename_file(input_file, result, force):
     else:
         print("No match found, file not renamed.")
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Rename PDF files based on content')
+    parser = argparse.ArgumentParser(
+        description='Rename PDF files based on content')
     parser.add_argument('input_file', help='Input PDF file to process')
-    parser.add_argument('--force', '-f', action='store_true', help='Force renaming (otherwise, perform dry run)')
+    parser.add_argument('--force', '-f', action='store_true',
+                        help='Force renaming (otherwise, perform dry run)')
     args = parser.parse_args()
 
     input_file = args.input_file
@@ -70,6 +75,6 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
+
 if __name__ == "__main__":
     main()
-

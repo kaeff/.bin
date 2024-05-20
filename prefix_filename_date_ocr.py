@@ -36,8 +36,8 @@ def translate_month_names(text):
 
 def filter_for_date(text):
     date_text = ""
-    pattern='([0-9]{2})[_\.-]([0-9]{2})[_\.-]([0-9]{2,4})'
-    pattern_long='([0-9]{2})\. ?([a-zA-Z]+)[ \.]([0-9]{4})'
+    pattern = '([0-9]{2})[_\\.-]([0-9]{2})[_\\.-]([0-9]{2,4})'
+    pattern_long = '([0-9]{2})\\. ?([a-zA-Z]+)[ \\.]([0-9]{4})'
 
     match = re.search(pattern, text)
     if match:
@@ -81,14 +81,18 @@ def perform_ocr(pdf_file):
 def get_new_filename(pdf_file, print_text):
     # Check if filename contains a date
     date = extract_date(pdf_file)
+
+    # Otherwise, extract text from PDF
     if not date:
         text = extract_text(pdf_file)
         date = extract_date(text)
 
+    # Otherwise, try OCR
     if not date:
         text = perform_ocr(pdf_file)
         date = extract_date(text)
 
+    # Otherwise, use mtime
     if not date:
         # Use last modified timestamp as date
         timestamp = os.path.getmtime(pdf_file)
@@ -97,7 +101,9 @@ def get_new_filename(pdf_file, print_text):
     # Rename file with prefix and date
     if date:
         formatted_date = date.strftime("%Y-%m-%d")
-        new_file_name = os.path.join(os.path.dirname(pdf_file), f"{formatted_date}_{os.path.basename(pdf_file)}")
+        new_file_name = os.path.join(
+            os.path.dirname(pdf_file),
+            f"{formatted_date}_{os.path.basename(pdf_file)}")
     else:
         new_file_name = pdf_file
 
@@ -115,20 +121,28 @@ def prefix_filename_date_ocr(force, print_text):
         # Rename file
         if force:
             os.rename(pdf_file, new_file_name)
-            print ("Renamed: " + new_file_name)
+            print("Renamed: " + new_file_name)
         else:
             print(pdf_file + " -> " + new_file_name)
 
 
-
 if __name__ == "__main__":
     arg_parser = ArgumentParser()
-    arg_parser.add_argument("-f", "--force", action=BooleanOptionalAction, help="Actually rename files")
-    arg_parser.add_argument("-t", "--print-text", action=BooleanOptionalAction, help="Print OCR text for debugging")
+    arg_parser.add_argument(
+        "-f", "--force",
+        action=BooleanOptionalAction,
+        help="Actually rename files")
+
+    arg_parser.add_argument(
+        "-t", "--print-text",
+        action=BooleanOptionalAction,
+        help="Print OCR text for debugging")
+
     args = arg_parser.parse_args()
 
     if not args.force:
-        print("DRY RUN - no files will be renamed. Call script with argument --force to rename files")
+        print("DRY RUN - no files will be renamed. " +
+              "Call script with argument --force to rename files")
         print()
 
     prefix_filename_date_ocr(args.force, args.print_text)

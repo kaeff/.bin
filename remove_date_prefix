@@ -1,7 +1,26 @@
 #!/bin/bash
+
+dry_run=false
+
+while getopts "f" opt; do
+  case $opt in
+    f)
+      dry_run=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
 for file in *; do
   if [[ -f $file ]]; then
     newfile=$(echo $file | sed 's/^[0-9_-]*//')
-    mv "$file" "$newfile"
+    if $dry_run; then
+      echo "mv \"$file\" \"$newfile\""
+    else
+      mv "$file" "$newfile"
+    fi
   fi
 done

@@ -1,8 +1,9 @@
 import os
 import shutil
 import tempfile
+from unittest.mock import MagicMock, call, patch
 import pytest
-from prefix_filename_date_ocr import get_new_filename
+from prefix_filename_date_ocr import get_new_filename, main, prefix_filename_date_ocr
 import datetime
 
 import fpdf  # pip3 intall fpdf
@@ -38,3 +39,20 @@ def test_use_last_modified_date_if_text_contains_no_date(temp_file):
 
     new_filename = get_new_filename(temp_file, True)
     assert os.path.basename(new_filename) == "2022-03-15_temp_file.pdf"
+
+
+def test_prefix_filename_date_ocr_script(capfd):
+    # Mock the command-line arguments
+    args = MagicMock()
+    args.force = True
+    args.print_text = False
+
+    main()
+
+    # Capture the output
+    captured = capfd.readouterr()
+
+    # Assert that the expected output is printed
+    assert "DRY RUN - no files will be renamed." in captured.out
+    # flake8: noqa
+    assert "Call script with argument --force to rename files" in captured.out

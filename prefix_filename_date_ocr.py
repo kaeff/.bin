@@ -126,7 +126,7 @@ def prefix_filename_date_ocr(force, print_text):
             print(pdf_file + " -> " + new_file_name)
 
 
-if __name__ == "__main__":
+def main():
     arg_parser = ArgumentParser()
     arg_parser.add_argument(
         "-f", "--force",
@@ -138,6 +138,13 @@ if __name__ == "__main__":
         action=BooleanOptionalAction,
         help="Print OCR text for debugging")
 
+    arg_parser.add_argument(
+        "files",
+        nargs="*",
+        default=glob.glob("*.PDF") + glob.glob("*.pdf"),
+        help="List of files to prefix"
+    )
+
     args = arg_parser.parse_args()
 
     if not args.force:
@@ -146,3 +153,7 @@ if __name__ == "__main__":
         print()
 
     prefix_filename_date_ocr(args.force, args.print_text)
+
+
+if __name__ == "__main__":
+    main()

@@ -27,7 +27,7 @@ def temp_file():
 
 def test_use_date_from_text_in_file(temp_file):
     write_pdf_with_static_text(temp_file, "01.02.2022")
-    new_filename = get_new_filename(temp_file, False)
+    new_filename = get_new_filename(temp_file)
     assert os.path.basename(new_filename) == "2022-02-01_temp_file.pdf"
 
 
@@ -37,7 +37,7 @@ def test_use_last_modified_date_if_text_contains_no_date(temp_file):
     specific_date = datetime.datetime(2022, 3, 15)
     os.utime(temp_file, (specific_date.timestamp(), specific_date.timestamp()))
 
-    new_filename = get_new_filename(temp_file, True)
+    new_filename = get_new_filename(temp_file)
     assert os.path.basename(new_filename) == "2022-03-15_temp_file.pdf"
 
 

@@ -36,16 +36,24 @@ def translate_month_names(text):
 
 def filter_for_date(text):
     date_text = ""
+    pattern_german_names = '([0-9]{1,2})[_\\.-] (' + \
+        '|'.join(MONTH_GERMAN_TO_ENGLISH.keys()) + \
+        ') ([0-9]{2,4})'
     pattern = '([0-9]{2})[_\\.-]([0-9]{2})[_\\.-]([0-9]{2,4})'
     pattern_long = '([0-9]{2})\\. ?([a-zA-Z]+)[ \\.]([0-9]{4})'
 
-    match = re.search(pattern, text)
+    # If written within the text, takes prescedence
+    match = re.search(pattern_german_names, text)
     if match:
         date_text = match.group(0)
     else:
-        match = re.search(pattern_long, text)
+        match = re.search(pattern, text)
         if match:
             date_text = match.group(0)
+        else:
+            match = re.search(pattern_long, text)
+            if match:
+                date_text = match.group(0)
     return date_text
 
 
@@ -78,7 +86,10 @@ def perform_ocr(pdf_file):
     return text
 
 
-def get_new_filename(pdf_file, print_text):
+def get_new_filename(pdf_file):
+    if re.search('^\\d{4}-\\d{2}-\\d{2}_', os.path.basename(pdf_file)):
+        return pdf_file
+
     # Check if filename contains a date
     date = extract_date(pdf_file)
 
@@ -110,13 +121,10 @@ def get_new_filename(pdf_file, print_text):
     return new_file_name
 
 
-def prefix_filename_date_ocr(force, print_text):
-    # Get all PDF files in current directory
-    pdf_files = glob.glob("*.PDF") + glob.glob("*.pdf")
-
-    for pdf_file in pdf_files:
+def prefix_filename_date_ocr(force, files):
+    for pdf_file in files:
         # Get new file name
-        new_file_name = get_new_filename(pdf_file, print_text)
+        new_file_name = get_new_filename(pdf_file)
 
         # Rename file
         if force:
@@ -152,7 +160,7 @@ def main():
               "Call script with argument --force to rename files")
         print()
 
-    prefix_filename_date_ocr(args.force, args.print_text)
+    prefix_filename_date_ocr(args.force, args.files)
 
 
 if __name__ == "__main__":
